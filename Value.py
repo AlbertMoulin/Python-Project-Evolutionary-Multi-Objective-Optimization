@@ -50,3 +50,12 @@ class Value:
                 return False
         
         return True
+    
+if __name__ == "__main__":
+        
+    #Testing the comparisons
+    value1 = Value([0,1,2])
+    value2 = Value([0,1,2])
+    value3 = Value([1,2,3])
+    value4 = Value([0,0,3])
+    print(value1 < value4)

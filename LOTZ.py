@@ -1,6 +1,6 @@
 from Individual import Individual
 from Value import Value
-
+from Sample import Sample
 
 class LOTZ:
     
@@ -40,4 +40,13 @@ class LOTZ:
             
         return Value(List)
     
+if __name__ == "__main__":
+        
+        
+    indiv1 =  Individual([1,1,1,0,0,1,0,1,0,1,0,0])
+    print( LOTZ.LOTZm(6,indiv1))
+        
+    indivRandom = Sample.GenerateIndividual(24, 1)[0]
+    print(indivRandom)
+    print(LOTZ.LOTZm(6,indivRandom))
     
