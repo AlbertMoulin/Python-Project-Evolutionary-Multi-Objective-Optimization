@@ -12,11 +12,15 @@ class NSGA:
         P = Sample.GenerateIndividual(n,N)
         OptFront = LOTZ.GenerateOptimalFrontLOTZm(n,m)
         t=0
-        while not NSGA.AinB(P,OptFront) and t< 9*n**2:
+        count1 = 0
+        count2 = 0
+        while not NSGA.AinB(OptFront,P) and t< 9*n**2:
             for k in range(N):
                 Lk = random.choice(P).individual.copy()
                 for i in range(n):
+                    count1 +=1
                     if random.uniform(0,1) < 1/n :
+                        count2+=1
                         Lk[i] = 1-Lk[i]
                 P.append(Individual(Lk))
             F = Nds.NdSorting(P,f)
@@ -30,6 +34,7 @@ class NSGA:
                 SortedIndex = sorted(range(len(F[i])),key=lambda index: CrowdingDistance[index])
                 P.append(F[i][SortedIndex.pop()])
             t +=1
+        print(t)
         return P
 
     def AinB(A,B):
@@ -43,10 +48,13 @@ class NSGA:
     
 if __name__ == "__main__":
 
-    n = 60
-    m = 6
-    N = 4*m
+    M = 6
+    n = 6
+    m = 2
+    N = 4*M
     def f(x):
-        return LOTZ.LOTZm(m,x)
+        return LOTZ.LOTZdeux(x)
+    for k in range(5):
+        print(NSGA.NSGA(f,n,m,N))
+
     
-    print(NSGA.NSGA(f,n,m,N))
