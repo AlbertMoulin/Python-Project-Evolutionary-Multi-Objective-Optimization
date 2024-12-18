@@ -12,7 +12,7 @@ class NSGA:
         P = Sample.GenerateIndividual(n,N)
         OptFront = LOTZ.GenerateOptimalFrontLOTZm(n,m)
         t=0
-        while not NSGA.AinB(P,OptFront) and t< 200:
+        while not NSGA.AinB(P,OptFront) and t< 9*n**2:
             for k in range(N):
                 Lk = random.choice(P).individual.copy()
                 for i in range(n):
@@ -43,10 +43,10 @@ class NSGA:
     
 if __name__ == "__main__":
 
-    n = 6
-    m = 2
+    n = 60
+    m = 6
     N = 4*m
     def f(x):
-        return LOTZ.LOTZdeux(x)
+        return LOTZ.LOTZm(m,x)
     
     print(NSGA.NSGA(f,n,m,N))
