@@ -40,6 +40,40 @@ class LOTZ:
             
         return Value(List)
     
+    def GenerateOptimalFrontLOTZ(n : int):
+        optimalFront = []
+        for k in range(n+1):
+            optimalSolutionk = []
+            for i in range(k):
+                optimalSolutionk.append(1)
+            for i in range(k, n):
+                optimalSolutionk.append(0)
+            optimalFront.append(Individual(optimalSolutionk))
+        return optimalFront 
+    
+    def GOFLOTZmAux(m2 , optimalFrontnp):
+        if m2 == 1:
+            return optimalFrontnp
+        optimalFrontm2 = []
+        for i in LOTZ.GOFLOTZmAux(m2-1, optimalFrontnp):
+            for j in optimalFrontnp:
+                optimalFrontm2.append(i+j)
+        return optimalFrontm2
+    
+    def GenerateOptimalFrontLOTZm(n : int, m : int):
+
+        if m%2 != 0 or (2*n)%m != 0:
+            return ValueError("m is not adapted")
+        
+        np = (2*n)//m
+        
+        optimalFrontnp = LOTZ.GenerateOptimalFrontLOTZ(np)
+
+        return LOTZ.GOFLOTZmAux(m//2 , optimalFrontnp)
+    
+    
+
+
 if __name__ == "__main__":
         
         
@@ -48,5 +82,7 @@ if __name__ == "__main__":
         
     indivRandom = Sample.GenerateIndividual(24, 1)[0]
     print(indivRandom)
-    print(LOTZ.LOTZm(6,indivRandom))
+
+
+    print(LOTZ.GenerateOptimalFrontLOTZm(12,4))
     

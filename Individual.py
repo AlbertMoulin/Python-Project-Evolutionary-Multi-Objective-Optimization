@@ -13,3 +13,9 @@ class Individual:
     def __repr__(self):
         return self.individual.__str__()
     
+    def __add__(self, other):
+
+        if not isinstance(other, Individual):
+            return ValueError("You are trying to add an Individual with some other type")
+        return Individual(self.individual + other.individual)
+    
