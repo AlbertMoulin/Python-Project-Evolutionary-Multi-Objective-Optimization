@@ -43,7 +43,10 @@ class CD:
             for i in range(1,self.N-1):
                 di = fk(xi(i+1))- fk(xi(i-1))
                 qi = fk(xi(-1))- fk(xi(0))
-                MatrixCD[k][IndiciesSortedByK[i]] = di/qi
+                if qi != 0:
+                    MatrixCD[k][IndiciesSortedByK[i]] = di/qi
+                else:
+                    MatrixCD[k][IndiciesSortedByK[i]] = float('inf')
         # Giving the final distance for every individual by summing on all objectives
         Final_List = [0 for i in range(self.N)]
         for i in range(self.N):
