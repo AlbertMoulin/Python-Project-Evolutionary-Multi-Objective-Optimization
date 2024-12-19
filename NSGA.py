@@ -28,14 +28,13 @@ class NSGA:
             F = Nds.NdSorting(P,f)
             P = []
             i = 0
-            while (i<len(F)) and (len(P) + len(F[i]) < N):
+            while (i<len(F)) and (len(P) + len(F[i]) <= N):
                 P = P + F[i]
                 i = i+1
-            i = i-1
+            FiCD = CD(f,F[i])
+            CrowdingDistance = FiCD.CD()
+            SortedIndex = sorted(range(len(F[i])),key=lambda index: CrowdingDistance[index])
             while(len(P)<N):
-                FiCD = CD(f,F[i])
-                CrowdingDistance = FiCD.CD()
-                SortedIndex = sorted(range(len(F[i])),key=lambda index: CrowdingDistance[index])
                 P.append(F[i][SortedIndex.pop()])
             t +=1
             print(t)
@@ -51,8 +50,32 @@ class NSGA:
         return True
     
 if __name__ == "__main__":
+
+    random.seed(8)
+    n = 6
+    m = 2
+    print(f'test with n = {n} and m = {m}')
+    def f(x):
+        return LOTZ.LOTZm(m,x)
+    print(NSGA.NSGA(f,n))
+
     n = 6
     m = 6
+    print(f'test with n = {n} and m = {m}')
+    def f(x):
+        return LOTZ.LOTZm(m,x)
+    print(NSGA.NSGA(f,n))
+
+    n = 9
+    m = 2
+    print(f'test with n = {n} and m = {m}')
+    def f(x):
+        return LOTZ.LOTZm(m,x)
+    print(NSGA.NSGA(f,n))
+
+    n = 9
+    m = 6
+    print(f'test with n = {n} and m = {m}')
     def f(x):
         return LOTZ.LOTZm(m,x)
     print(NSGA.NSGA(f,n))
