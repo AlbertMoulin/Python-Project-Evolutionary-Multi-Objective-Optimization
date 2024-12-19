@@ -8,9 +8,11 @@ import random
 
 class NSGA:
 
-    def NSGA(f,n,m, N):
-        P = Sample.GenerateIndividual(n,N)
+    def NSGA(f,n):
+        m = len(f(Sample.GenerateIndividual(n,1)[0]).value)
         OptFront = LOTZ.GenerateOptimalFrontLOTZm(n,m)
+        N = len(OptFront)*4
+        P = Sample.GenerateIndividual(n,N)
         t=0
         count1 = 0
         count2 = 0
@@ -36,7 +38,7 @@ class NSGA:
                 SortedIndex = sorted(range(len(F[i])),key=lambda index: CrowdingDistance[index])
                 P.append(F[i][SortedIndex.pop()])
             t +=1
-        print(t)
+            print(t)
         return P
 
     def AinB(A,B):
@@ -49,13 +51,10 @@ class NSGA:
         return True
     
 if __name__ == "__main__":
-
-    M = 6
     n = 6
-    m = 2
-    N = 4*M
+    m = 6
     def f(x):
-        return LOTZ.LOTZdeux(x)
-    print(NSGA.NSGA(f,n,m,N))
+        return LOTZ.LOTZm(m,x)
+    print(NSGA.NSGA(f,n))
 
     
