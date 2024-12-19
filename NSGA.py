@@ -26,8 +26,10 @@ class NSGA:
             F = Nds.NdSorting(P,f)
             P = []
             i = 0
-            while (len(P) + len(F[i]) < N):
+            while (i<len(F)) and (len(P) + len(F[i]) < N):
                 P = P + F[i]
+                i = i+1
+            i = i-1
             while(len(P)<N):
                 FiCD = CD(f,F[i])
                 CrowdingDistance = FiCD.CD()
@@ -54,7 +56,6 @@ if __name__ == "__main__":
     N = 4*M
     def f(x):
         return LOTZ.LOTZdeux(x)
-    for k in range(5):
-        print(NSGA.NSGA(f,n,m,N))
+    print(NSGA.NSGA(f,n,m,N))
 
     

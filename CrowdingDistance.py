@@ -37,16 +37,16 @@ class CD:
             # xi is the ith highest individual regarding values on objective k
             def xi(i):
                 return self.ListF[IndiciesSortedByK[i]]
-            MatrixCD[k][IndiciesSortedByK[0]] = float('inf')
-            MatrixCD[k][IndiciesSortedByK[-1]] = float('inf')
-            # using the formula for the crowding distance we have :
-            for i in range(1,self.N-1):
-                di = fk(xi(i+1))- fk(xi(i-1))
-                qi = fk(xi(-1))- fk(xi(0))
-                if qi != 0:
-                    MatrixCD[k][IndiciesSortedByK[i]] = di/qi
-                else:
-                    MatrixCD[k][IndiciesSortedByK[i]] = float('inf')
+            q = fk(xi(-1))- fk(xi(0))
+            if q != 0:
+                for i in range(1,self.N-1):
+                    # using the formula for the crowding distance we have :
+                    di = fk(xi(i+1))- fk(xi(i-1))
+                    MatrixCD[k][IndiciesSortedByK[i]] = di/q
+                MatrixCD[k][IndiciesSortedByK[0]] = float('inf')
+                MatrixCD[k][IndiciesSortedByK[-1]] = float('inf')
+            
+            
         # Giving the final distance for every individual by summing on all objectives
         Final_List = [0 for i in range(self.N)]
         for i in range(self.N):
@@ -59,9 +59,11 @@ if __name__ == "__main__":
 
     def f(x):
         return LOTZ.LOTZm(4,x)
-    
-    CD1 = CD(f,Sample.GenerateIndividual(12,19))
-    print(CD.CD(CD1))
+    A = Sample.GenerateIndividual(12,19)
+    CD1 = CD(f,A)
+    for k in A:
+        print(k)
+    print(CD1.CD())
 
 
  
