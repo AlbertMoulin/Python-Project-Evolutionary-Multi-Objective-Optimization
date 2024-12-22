@@ -29,31 +29,42 @@ class NSGA:
                     if random.uniform(0,1) < 1/n :
                         Lk[i] = 1-Lk[i]
                 P.append(Individual(Lk))
+            # Sort through non dominated sorting
             F = Nds.NdSorting(P,f)
+            # Add fronts in increasing order until adding N individuals
             P = []
             i = 0
             while (i<len(F)) and (len(P) + len(F[i]) <= N):
                 P = P + F[i]
                 i = i+1
-            FiCD = CD(f,F[i])
-            CrowdingDistance = FiCD.CD()
-            SortedIndex = sorted(range(len(F[i])),key=lambda index: CrowdingDistance[index])
-            while(len(P)<N):
-                P.append(F[i][SortedIndex.pop()])
+            # If we dont have N individuals we add individuals by decreasing order of crowding distance until reaching a size of N
+            if len(P) < N:
+                FiCD = CD(f,F[i])
+                CrowdingDistance = FiCD.CD()
+                SortedIndex = sorted(range(len(F[i])),key=lambda index: CrowdingDistance[index])
+                while(len(P)<N):
+                    P.append(F[i][SortedIndex.pop()])
             t +=1
-            print(t)
         return P
 
     def AinB(A,B):
         for x in A:
-            boolx = False
-            for y in B:
-                boolx = boolx or x.individual == y.individual
-            if not boolx:
+            boolx = True
+            i=0
+            while boolx and i< len(B):
+                boolx = not x.individual == B[i].individual
+                i = i+1
+            if boolx:
                 return False
         return True
     
 if __name__ == "__main__":
+
+    A = Sample.GenerateIndividual(2,3)
+    B = Sample.GenerateIndividual(2,2)
+    print(A)
+    print(B)
+    print(NSGA.AinB(A,B))
 
     random.seed(8)
     n = 6
