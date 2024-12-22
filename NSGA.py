@@ -9,20 +9,24 @@ import random
 class NSGA:
 
     def NSGA(f,n):
+        # Retrieving the value of m through the function f
         m = len(f(Sample.GenerateIndividual(n,1)[0]).value)
+        # Generating optimal front for n and m
         OptFront = LOTZ.GenerateOptimalFrontLOTZm(n,m)
+        # Defining the number of individual as 4 times the size of the optimal front
         N = len(OptFront)*4
+        # Generating random individuals
         P = Sample.GenerateIndividual(n,N)
+        # Initialize number of step
         t=0
-        count1 = 0
-        count2 = 0
         while not NSGA.AinB(OptFront,P) and t< 9*n**2:
+            # Picked N individuals randomly and mutate them 
             for k in range(N):
+                # Select an individual and copy it's list
                 Lk = random.choice(P).individual.copy()
+                #Mutate
                 for i in range(n):
-                    count1 +=1
                     if random.uniform(0,1) < 1/n :
-                        count2+=1
                         Lk[i] = 1-Lk[i]
                 P.append(Individual(Lk))
             F = Nds.NdSorting(P,f)

@@ -18,3 +18,6 @@ class Sample:
             SampleList.append(Individual(SampleK))
         return SampleList
     
+if __name__ == "__main__":
+    print(Sample.GenerateIndividual(4,10))
+    
