@@ -24,7 +24,7 @@ class NSGA:
             for k in range(N):
                 # Select an individual and copy it's list
                 Lk = random.choice(P).individual.copy()
-                #Mutate
+                #Mutate said list
                 for i in range(n):
                     if random.uniform(0,1) < 1/n :
                         Lk[i] = 1-Lk[i]

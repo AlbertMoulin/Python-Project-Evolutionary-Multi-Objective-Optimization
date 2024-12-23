@@ -24,4 +24,3 @@ class Individual:
 if __name__ == "__main__":
     indiv1 = Individual([0,1,2,84])
     indiv2 = Individual([0,1,2,84])
-    print(indiv1.__hash__())
