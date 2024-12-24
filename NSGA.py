@@ -77,15 +77,15 @@ if __name__ == "__main__":
         return LOTZ.LOTZm(m,x)
     print(NSGA.NSGA(f,n))
 
-    n = 9
+    n = 10
     m = 2
     print(f'test with n = {n} and m = {m}')
     def f(x):
         return LOTZ.LOTZm(m,x)
     print(NSGA.NSGA(f,n))
 
-    n = 9
-    m = 6
+    n = 10
+    m = 4
     print(f'test with n = {n} and m = {m}')
     def f(x):
         return LOTZ.LOTZm(m,x)

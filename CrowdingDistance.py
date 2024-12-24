@@ -51,17 +51,21 @@ class CD:
                     xi(i).CrowdingDistanceListK.append(di/q)
                     xi(i).PreviousList.append(xi(i-1))
                     xi(i).NextList.append(xi(i+1))
+                    xi(i).state.append(0)
                 xi(0).CrowdingDistanceListK.append(float('inf'))
                 xi(0).NextList.append(xi(1))
                 xi(0).PreviousList.append(xi(-1))
+                xi(0).state.append(1)
                 xi(-1).CrowdingDistanceListK.append(float('inf'))
                 xi(-1).NextList.append(xi(0))
                 xi(-1).PreviousList.append(xi(-2))
+                xi(-1).state.append(1)
             else:
                 for i in range(0,self.N):
                     xi(i).CrowdingDistanceListK.append(0)
-                    xi(i).PreviousList.append(-1)
-                    xi(i).NextList.append(-1)
+                    xi(i).PreviousList.append(xi(i-1))
+                    xi(i).NextList.append(xi(i+1))
+                    xi(i).state.append(2)
             
             
         # Giving the final distance for every individual by summing on all objectives
@@ -70,35 +74,33 @@ class CD:
 
     def update(self, x : Individual):
         for k in range(self.m):
-            if x.PreviousList[k] != -1:
-                if x.CrowdingDistanceListK[k] == float('inf'):
-                    self.updateINF(k , x)
-                else:
-                    self.updatenotINF(k , x)
-                if x.PreviousList[k] != -1:
-                    x.PreviousList[k].CalculateCrowdingDistance
-                    x.NextList[k].CalculateCrowdingDistance
+            if x.state == 1:
+                self.updateINF(k , x)
+                x.PreviousList[k].CalculateCrowdingDistance
+                x.NextList[k].CalculateCrowdingDistance
+            if x.state == 0:
+                self.updatenotINF(k , x)
+                x.PreviousList[k].CalculateCrowdingDistance
+                x.NextList[k].CalculateCrowdingDistance
         self.ListF.remove(x)
+        self.N += -1
 
     def updateINF(self, k : int , x : Individual):
         q = self.fk(k,x.PreviousList[k]) - self.fk(k,x.NextList[k])
         self.ListQ[k] = q 
         if q == 0:
+            x.NextList[k].PreviousList[k] = x.PreviousList[k]
+            x.PreviousList[k].NextList[k] = x.NextList[k]
             xi = x
-            for i in range(self.N):
+            while xi.state[k] != 3 :
                 xi.CrowdingDistanceListK[k] = 0
+                xi.state[k] = 3
                 xi = xi.NextList[k]
-            xi = x.NextList[k]
-            while xi != -1:
-                xi.PreviousList[k] = -1
-                temp = xi.NextList[k]
-                xi.NextList[k]  =  -1
-                xi = temp
         else : 
             x.NextList[k].PreviousList[k] = x.PreviousList[k]
             x.PreviousList[k].NextList[k] = x.NextList[k]
             xi = x.NextList[k]
-            for i in range(1,self.N-1):
+            for i in range(1,self.N-2):
                 xi.CrowdingDistanceListK[k] = ( self.fk(k,xi.NextList[k])- self.fk(k,xi.PreviousList[k]) ) / q
                 xi = xi.NextList[k]
             x.NextList[k].CrowdingDistanceListK[k] = float('inf')

@@ -7,6 +7,8 @@ class Individual:
     CrowdingDistanceListK : list[float]
     NextList : list["Individual"]
     PreviousList : list["Individual"]
+    state : list[int]
+    # 0 is normal, 1 is edge , 2 is all equal
     
     def __init__(self, individual : list[int]):
         self.individual = individual
@@ -14,6 +16,7 @@ class Individual:
         self.CrowdingDistanceListK = []
         self.NextList = []
         self.PreviousList = []
+        self.state = []
     
     def __str__(self):
         return self.individual.__str__()
