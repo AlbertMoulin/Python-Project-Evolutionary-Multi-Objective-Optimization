@@ -16,19 +16,13 @@ class NSGA:
         # Defining the number of individual as 4 times the size of the optimal front
         N = len(OptFront)*4
         # Generating random individuals
-        P = Sample.GenerateIndividual(n,N)
+        P : list[Individual] = Sample.GenerateIndividual(n,N)
         # Initialize number of step
         t=0
         while not NSGA.AinB(OptFront,P) and t< 9*n**2:
             # Picked N individuals randomly and mutate them 
             for k in range(N):
-                # Select an individual and copy it's list
-                Lk = random.choice(P).individual.copy()
-                #Mutate said list
-                for i in range(n):
-                    if random.uniform(0,1) < 1/n :
-                        Lk[i] = 1-Lk[i]
-                P.append(Individual(Lk))
+                P.append(random.choice(P).mutate())
             # Sort through non dominated sorting
             F = Nds.NdSorting(P,f)
             # Add fronts in increasing order until adding N individuals
@@ -45,6 +39,7 @@ class NSGA:
                 while(len(P)<N):
                     P.append(F[i][SortedIndex.pop()])
             t +=1
+        print(t)
         return P
 
     def AinB(A,B):
