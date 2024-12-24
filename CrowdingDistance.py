@@ -84,9 +84,12 @@ class CD:
         q = self.fk(k,x.PreviousList[k]) - self.fk(k,x.NextList[k])
         self.ListQ[k] = q 
         if q == 0:
+            xi = x
+            for i in range(self.N):
+                xi.CrowdingDistanceListK[k] = 0
+                xi = xi.NextList[k]
             xi = x.NextList[k]
             while xi != -1:
-                xi.CrowdingDistanceListK[k] = 0
                 xi.PreviousList[k] = -1
                 temp = xi.NextList[k]
                 xi.NextList[k]  =  -1
