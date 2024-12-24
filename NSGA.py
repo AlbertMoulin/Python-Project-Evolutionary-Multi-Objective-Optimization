@@ -16,19 +16,13 @@ class NSGA:
         # Defining the number of individual as 4 times the size of the optimal front
         N = len(OptFront)*4
         # Generating random individuals
-        P = Sample.GenerateIndividual(n,N)
+        P : list[Individual] = Sample.GenerateIndividual(n,N)
         # Initialize number of step
         t=0
         while not NSGA.AinB(OptFront,P) and t< 9*n**2:
             # Picked N individuals randomly and mutate them 
             for k in range(N):
-                # Select an individual and copy it's list
-                Lk = random.choice(P).individual.copy()
-                #Mutate said list
-                for i in range(n):
-                    if random.uniform(0,1) < 1/n :
-                        Lk[i] = 1-Lk[i]
-                P.append(Individual(Lk))
+                P.append(random.choice(P).mutate())
             # Sort through non dominated sorting
             F = Nds.NdSorting(P,f)
             # Add fronts in increasing order until adding N individuals
@@ -41,9 +35,15 @@ class NSGA:
             if len(P) < N:
                 FiCD = CD(f,F[i])
                 CrowdingDistance = FiCD.CD()
+                print(FiCD.ListF)
+                print(CrowdingDistance)
                 SortedIndex = sorted(range(len(F[i])),key=lambda index: CrowdingDistance[index])
                 while(len(P)<N):
-                    P.append(F[i][SortedIndex.pop()])
+                    tempi = SortedIndex.pop()
+                    temp = F[i][tempi]
+                    print(tempi)
+                    print(temp)
+                    P.append(temp)
             t +=1
         return P
 
@@ -79,20 +79,20 @@ if __name__ == "__main__":
     print(f'test with n = {n} and m = {m}')
     def f(x):
         return LOTZ.LOTZm(m,x)
-    print(NSGA.NSGA(f,n))
+    #print(NSGA.NSGA(f,n))
 
     n = 9
     m = 2
     print(f'test with n = {n} and m = {m}')
     def f(x):
         return LOTZ.LOTZm(m,x)
-    print(NSGA.NSGA(f,n))
+    #print(NSGA.NSGA(f,n))
 
     n = 9
     m = 6
     print(f'test with n = {n} and m = {m}')
     def f(x):
         return LOTZ.LOTZm(m,x)
-    print(NSGA.NSGA(f,n))
+    # print(NSGA.NSGA(f,n))
 
     

@@ -1,11 +1,9 @@
 from typing import List, Dict
+import random
 
 class Individual:
     
     individual : List[int]
-
-    IndexNext : int
-    IndexPrevious : int
     
     def __init__(self, individual : List[int]):
         self.individual = individual
@@ -25,9 +23,21 @@ class Individual:
         if not isinstance(other, Individual):
             return ValueError("You are trying to add an Individual with some other type")
         return Individual(self.individual + other.individual)
+    
+    def mutate(self):
+        n = len(self.individual)
+        # Select an individual and copy it's list
+        Lk = self.individual.copy()
+        #Mutate said list
+        for i in range(n):
+            if random.uniform(0,1) < 1/n :
+                Lk[i] = 1-Lk[i]
+        return Individual(Lk)
 
 
     
 if __name__ == "__main__":
-    indiv1 = Individual([0,1,2,84])
+    indiv1 = Individual([0,1])
     indiv2 = Individual([0,1,2,84])
+    for k in range(5):
+        print(indiv1.mutate())
