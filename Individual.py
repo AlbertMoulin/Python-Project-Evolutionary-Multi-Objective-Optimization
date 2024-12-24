@@ -3,9 +3,16 @@ from typing import List, Dict
 class Individual:
     
     individual : List[int]
+
+    IndexNext : int
+    IndexPrevious : int
     
     def __init__(self, individual : List[int]):
         self.individual = individual
+        self.ValueNext = []
+        self.ValuePrevious = []
+        self.IndexNext = None
+        self.IndexPrevious = None
     
     def __str__(self):
         return self.individual.__str__()

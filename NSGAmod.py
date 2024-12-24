@@ -2,8 +2,9 @@ from LOTZ import LOTZ
 from Individual import Individual
 from Sample import Sample
 from NDS import Nds
-from CrowdingDistance import CD
+from CrowdingDistanceMod import CD
 import random
+from BinaryHeapIndex import BinaryHeap
 
 
 class NSGA:
@@ -19,7 +20,7 @@ class NSGA:
         P = Sample.GenerateIndividual(n,N)
         # Initialize number of step
         t=0
-        while not NSGA.AinB(OptFront,P) and t< 9*n**2:
+        while not NSGA.AinB(OptFront,P) and t< 9:
             # Picked N individuals randomly and mutate them 
             for k in range(N):
                 # Select an individual and copy it's list
@@ -38,14 +39,18 @@ class NSGA:
                 P = P + F[i]
                 i = i+1
             # If we dont have N individuals we add individuals by decreasing order of crowding distance until reaching a size of N
+            print(F[i])
             if len(P) < N:
                 FiCD = CD(f,F[i])
-                CrowdingDistance = FiCD.CD()
-                SortedIndex = sorted(range(len(F[i])),key=lambda index: CrowdingDistance[index])
+                BHFi = BinaryHeap(FiCD)
+                
                 for k in range(N-len(P)):
-                    FiCD.update()
-                    P.append(F[i][SortedIndex.pop()])
+                    i = BHFi.extract_min()
+                    print(FiCD.ListF[i])
+                    P.append(FiCD.ListF[i])
+                    FiCD.removed(i)
             t +=1
+            print(t)
         return P
 
     def AinB(A,B):
@@ -63,9 +68,9 @@ if __name__ == "__main__":
 
     A = Sample.GenerateIndividual(2,3)
     B = Sample.GenerateIndividual(2,2)
-    print(A)
-    print(B)
-    print(NSGA.AinB(A,B))
+    #print(A)
+    #print(B)
+    #print(NSGA.AinB(A,B))
 
     random.seed(8)
     n = 6
@@ -80,20 +85,20 @@ if __name__ == "__main__":
     print(f'test with n = {n} and m = {m}')
     def f(x):
         return LOTZ.LOTZm(m,x)
-    print(NSGA.NSGA(f,n))
+    #print(NSGA.NSGA(f,n))
 
     n = 9
     m = 2
     print(f'test with n = {n} and m = {m}')
     def f(x):
         return LOTZ.LOTZm(m,x)
-    print(NSGA.NSGA(f,n))
+    #print(NSGA.NSGA(f,n))
 
     n = 9
     m = 6
     print(f'test with n = {n} and m = {m}')
     def f(x):
         return LOTZ.LOTZm(m,x)
-    print(NSGA.NSGA(f,n))
+    #print(NSGA.NSGA(f,n))
 
     

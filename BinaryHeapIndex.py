@@ -14,7 +14,7 @@ class BinaryHeap:
     def _bubble_up(self, index):
         while index > 0:
             parent_index = (index - 1) // 2
-            if self.FiCD.CDList[self.heap[index]] < self.FiCD.CDList[self.heap[parent_index]]:
+            if self.FiCD.CDList[self.heap[index]] > self.FiCD.CDList[self.heap[parent_index]]:
                 self.heap[index], self.heap[parent_index] = self.heap[parent_index], self.heap[index]
                 index = parent_index
             else:
@@ -40,8 +40,7 @@ class BinaryHeap:
 
         if len(self.heap) > 0:
             self._bubble_down(0)
-
-        self.FiCD.removed(min_element)
+        
         return min_element
     
     def _bubble_down(self, index):

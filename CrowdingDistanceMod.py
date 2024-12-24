@@ -18,8 +18,6 @@ class CD:
     # crowding distance list
     MatrixCD : list
     #Matrix of crowding distance of an individual i for the objective k
-    AdjacentsInfo : list
-    #Lists of sorted indicies for every objective k
     ListQk : list
     # List of the denominators for every objective
 
@@ -27,16 +25,19 @@ class CD:
         self.CDList = [0 for i in range(self.N)]
         for i in range(self.N):
             for k in range(self.m):
-                self.CDList[i] += self.MatrixCD[k][i]/self.ListQk[k]
+                if isinstance(self.MatrixCD[k][i], ValueError):
+                    self.CDList[i] = ValueError('not anymore')
+                else:
+                    self.CDList[i] += self.MatrixCD[k][i]/self.ListQk[k]
         
     def fk(self,k,x):
         return self.f(x).value[k]
     
-    def xki(self,k,i):
-        return self.ListF[self.AdjacentsInfo[k][i]]
+    def xki(self,k,i,IndiciesSortedByK) -> Individual:
+        return self.ListF[IndiciesSortedByK[i]]
     
-    def fkxi(self,k,i):
-        return self.fk(k,self.xki(k,i))
+    def fkxi(self,k,i,IndiciesSortedByK):
+        return self.fk(k,self.xki(k,i,IndiciesSortedByK))
 
     # Initialisation
     def __init__(self, f, ListF):
@@ -46,7 +47,6 @@ class CD:
         self.N = len(ListF)
         # Creating a matrix giving the crowding distance of an individual i for the objective k 
         MatrixCD = [[0 for i in range(self.N)] for k in range(self.m)]
-        self.AdjacentsInfo = []
         self.ListQk = []
         # Loop on all objectives
         for k in range(self.m):
@@ -55,12 +55,13 @@ class CD:
             
             # Sorting the indicies by the value on objective k
             IndiciesSortedByK = sorted(range(self.N), key=lambda index: self.fk(k,self.ListF[index]) )
-            self.AdjacentsInfo.append(IndiciesSortedByK)
-            self.ListQk.append( self.fkxi(k,-1)- self.fkxi(k,0) )
+            self.ListQk.append( self.fkxi(k,-1,IndiciesSortedByK)- self.fkxi(k,0,IndiciesSortedByK) )
             if self.ListQk[-1] != 0:
                 for i in range(1,self.N-1):
                     # using the formula for the crowding distance we have :
-                    di = self.fkxi(k,i+1)- self.fkxi(k,i-1)
+                    self.xki(k,i,IndiciesSortedByK).IndexPrevious = IndiciesSortedByK[i-1]
+                    self.xki(k,i,IndiciesSortedByK).IndexNext = IndiciesSortedByK[i+1]
+                    di = self.fkxi(k,i+1,IndiciesSortedByK)- self.fkxi(k,i-1,IndiciesSortedByK)
                     MatrixCD[k][IndiciesSortedByK[i]] = di
                 MatrixCD[k][IndiciesSortedByK[0]] = float('inf')
                 MatrixCD[k][IndiciesSortedByK[-1]] = float('inf')
@@ -70,15 +71,18 @@ class CD:
         self.CalculateCDList()
 
     def removed(self, index):
-        self.ListF.pop(index)
-        self.N = self.N-1
-        if self.CDList.pop(index) != float('inf'):
+
+        if self.CDList[index] != float('inf'):
             for k in range(self.m):
-                print(f'for index {index}')
-                self.MatrixCD[k].pop(index)
-                self.MatrixCD[k][self.AdjacentsInfo[k][index-1]] +=  self.fkxi(k,index+1) - self.fkxi(k,index)
-                self.MatrixCD[k][self.AdjacentsInfo[k][index+1]] +=  self.fkxi(k,index) - self.fkxi(k,index-1)
-        self.CalculateCDList
+                indexNext, indexPrevious = self.ListF[index].IndexNext, self.ListF[index].IndexPrevious
+                self.MatrixCD[k][indexPrevious] +=  self.fk(k,self.ListF[indexNext]) - self.fk(k,self.ListF[index])
+                self.MatrixCD[k][indexNext] +=  self.fk(k,self.ListF[index]) - self.fk(k,self.ListF[indexPrevious])
+                self.ListF[indexNext].IndexPrevious = indexPrevious
+                self.ListF[indexPrevious].IndexNext = indexNext
+                self.MatrixCD[k][index] = ValueError("tried to retrieve deleted param in coef-matrix")
+        self.ListF[index] = ValueError("tried to retrieve deleted individual in list")
+        self.CDList[index] = ValueError('tried to retrieve deleted crowding distance in list')
+        self.CalculateCDList()
 
         
         
@@ -93,6 +97,9 @@ if __name__ == "__main__":
     for k in A:
         print(k)
         print(LOTZ.LOTZm(4,k))
+    print(CD1.CDList)
+    CD1.removed(5)
+    print(CD1.MatrixCD)
     print(CD1.CDList)
 
 
