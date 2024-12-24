@@ -3,6 +3,7 @@ from Individual import Individual
 from Sample import Sample
 from NDS import Nds
 from CrowdingDistance import CD
+from BinaryHeap import BinaryHeap
 import random
 
 
@@ -34,11 +35,12 @@ class NSGA:
             # If we dont have N individuals we add individuals by decreasing order of crowding distance until reaching a size of N
             if len(P) < N:
                 FiCD = CD(f,F[i])
-                CrowdingDistance = FiCD.CD()
-                SortedIndex = sorted(range(len(F[i])),key=lambda index: CrowdingDistance[index])
+                FiCD.CD()
+                BinHea = BinaryHeap(FiCD)
                 while(len(P)<N):
-                    P.append(F[i][SortedIndex.pop()])
+                    P.append(BinHea.extract_max())
             t +=1
+        print(t)
         return P
 
     def AinB(A,B):
@@ -73,20 +75,20 @@ if __name__ == "__main__":
     print(f'test with n = {n} and m = {m}')
     def f(x):
         return LOTZ.LOTZm(m,x)
-    #print(NSGA.NSGA(f,n))
+    print(NSGA.NSGA(f,n))
 
     n = 9
     m = 2
     print(f'test with n = {n} and m = {m}')
     def f(x):
         return LOTZ.LOTZm(m,x)
-    #print(NSGA.NSGA(f,n))
+    print(NSGA.NSGA(f,n))
 
     n = 9
     m = 6
     print(f'test with n = {n} and m = {m}')
     def f(x):
         return LOTZ.LOTZm(m,x)
-    # print(NSGA.NSGA(f,n))
+    print(NSGA.NSGA(f,n))
 
     
