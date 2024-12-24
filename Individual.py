@@ -4,6 +4,7 @@ import random
 class Individual:
     
     individual : List[int]
+    CrowdingDistance : float
     
     def __init__(self, individual : List[int]):
         self.individual = individual

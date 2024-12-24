@@ -6,7 +6,7 @@ from LOTZ import LOTZ
 
 class CD:
     
-    ListF : list
+    ListF : list[Individual]
     # List of Individuals
     f : Callable
     # function taking an individual and giving it's value for every objective k
@@ -16,7 +16,7 @@ class CD:
     # number of individuals
 
     # Initialisation
-    def __init__(self, f, ListF):
+    def __init__(self, f : Callable, ListF : list[Individual]):
         self.f = f
         self.ListF = ListF
         self.m = len(f(self.ListF[0]).value)
@@ -49,11 +49,9 @@ class CD:
             
             
         # Giving the final distance for every individual by summing on all objectives
-        Final_List = [0 for i in range(self.N)]
         for i in range(self.N):
             for k in range(self.m):
-                Final_List[i] += MatrixCD[k][i]
-        return Final_List
+                self.ListF[i].CrowdingDistance += MatrixCD[k][i]
 
 # tests
 if __name__ == "__main__":
