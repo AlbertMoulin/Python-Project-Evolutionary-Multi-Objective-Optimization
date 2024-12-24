@@ -59,6 +59,7 @@ class CD:
                 xi(-1).PreviousList.append(xi(-2))
             else:
                 for i in range(0,self.N):
+                    xi(i).CrowdingDistanceListK.append(0)
                     xi(i).PreviousList.append(-1)
                     xi(i).NextList.append(-1)
             
@@ -74,19 +75,31 @@ class CD:
                     self.updateINF(k , x)
                 else:
                     self.updatenotINF(k , x)
+                if x.PreviousList[k] != -1:
+                    x.PreviousList[k].CalculateCrowdingDistance
+                    x.NextList[k].CalculateCrowdingDistance
+        self.ListF.remove(x)
 
     def updateINF(self, k : int , x : Individual):
         q = self.fk(k,x.PreviousList[k]) - self.fk(k,x.NextList[k])
-        print(f'')
         self.ListQ[k] = q 
-        x.NextList[k].PreviousList[k] = x.PreviousList[k]
-        x.PreviousList[k].NextList[k] = x.NextList[k]
-        xi = x.NextList[k]
-        for i in range(1,self.N-1):
-            xi.CrowdingDistanceListK[k] = ( self.fk(k,xi.NextList[k])- self.fk(k,xi.PreviousList[k]) ) / q
-            xi = xi.NextList[k]
-        x.NextList[k].CrowdingDistanceListK[k] = float('inf')
-        x.PreviousList[k].CrowdingDistanceListK[k] = float('inf')
+        if q == 0:
+            xi = x.NextList[k]
+            while xi != -1:
+                xi.CrowdingDistanceListK[k] = 0
+                xi.PreviousList[k] = -1
+                temp = xi.NextList[k]
+                xi.NextList[k]  =  -1
+                xi = temp
+        else : 
+            x.NextList[k].PreviousList[k] = x.PreviousList[k]
+            x.PreviousList[k].NextList[k] = x.NextList[k]
+            xi = x.NextList[k]
+            for i in range(1,self.N-1):
+                xi.CrowdingDistanceListK[k] = ( self.fk(k,xi.NextList[k])- self.fk(k,xi.PreviousList[k]) ) / q
+                xi = xi.NextList[k]
+            x.NextList[k].CrowdingDistanceListK[k] = float('inf')
+            x.PreviousList[k].CrowdingDistanceListK[k] = float('inf')
 
 
     def updatenotINF(self, k : int , x : Individual):
@@ -106,14 +119,14 @@ if __name__ == "__main__":
     B = [Individual([0,1,1,0]) for k in range(5)]
     CD1 = CD(f,A)
     CD1.CD()
-    for k in A:
+    for k in CD1.ListF:
         print(k)
         print(k.CrowdingDistance)
         print(k.PreviousList)
         print(k.NextList)
-    CD1.update(A[0])
-    print( " HEYYY ")
-    for k in A:
+    CD1.update(A[3])
+    print("HEYYY ")
+    for k in CD1.ListF:
         print(k)
         print(k.CrowdingDistance)
         print(k.PreviousList)
