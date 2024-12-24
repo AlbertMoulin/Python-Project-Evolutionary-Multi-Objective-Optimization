@@ -26,9 +26,8 @@ class Individual:
     
     def mutate(self):
         n = len(self.individual)
-        # Select an individual and copy it's list
         Lk = self.individual.copy()
-        #Mutate said list
+        # Mutate individual's list
         for i in range(n):
             if random.uniform(0,1) < 1/n :
                 Lk[i] = 1-Lk[i]
