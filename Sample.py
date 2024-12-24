@@ -4,14 +4,14 @@ from Value import Value
 
 class Sample:
     
-    def GenerateValue(m, N):
+    def GenerateValue(m : int, N : int) -> list[Value]:
         SampleList = []
         for k in range(N):
             SampleK = [ random.gauss(0,1) for i in range(m) ]
             SampleList.append(Value(SampleK))
         return SampleList
     
-    def GenerateIndividual(n, N):
+    def GenerateIndividual(n : int, N : int) -> list[Individual]:
         SampleList = []
         for k in range(N):
             SampleK = [ random.choice([0,1]) for i in range(n) ]

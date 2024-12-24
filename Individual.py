@@ -1,17 +1,19 @@
-from typing import List, Dict
 import random
 
 class Individual:
     
-    individual : List[int]
+    individual : list[int]
     CrowdingDistance : float
+    CrowdingDistanceListK : list[float]
+    NextList : list["Individual"]
+    PreviousList : list["Individual"]
     
-    def __init__(self, individual : List[int]):
+    def __init__(self, individual : list[int]):
         self.individual = individual
-        self.ValueNext = []
-        self.ValuePrevious = []
-        self.IndexNext = None
-        self.IndexPrevious = None
+        self.CrowdingDistance = 0
+        self.CrowdingDistanceListK = []
+        self.NextList = []
+        self.PreviousList = []
     
     def __str__(self):
         return self.individual.__str__()
@@ -34,10 +36,16 @@ class Individual:
                 Lk[i] = 1-Lk[i]
         return Individual(Lk)
 
+    def CalculateCrowdingDistance(self) -> None:
+        self.CrowdingDistance = sum(self.CrowdingDistanceListK)
+
 
     
 if __name__ == "__main__":
     indiv1 = Individual([0,1])
     indiv2 = Individual([0,1,2,84])
+    indiv1.CrowdingDistanceListK = [1,1,1]
     for k in range(5):
         print(indiv1.mutate())
+    indiv1.CalculateCrowdingDistance()
+    print(indiv1.CrowdingDistance)

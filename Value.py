@@ -1,10 +1,8 @@
-from typing import List, Dict
-
 class Value:
     
-    value : List[float]
+    value : list[float]
     
-    def __init__(self, value : List[float]):
+    def __init__(self, value : list[float]):
         self.value = value
     
     def __str__(self):
