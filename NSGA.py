@@ -35,15 +35,9 @@ class NSGA:
             if len(P) < N:
                 FiCD = CD(f,F[i])
                 CrowdingDistance = FiCD.CD()
-                print(FiCD.ListF)
-                print(CrowdingDistance)
                 SortedIndex = sorted(range(len(F[i])),key=lambda index: CrowdingDistance[index])
                 while(len(P)<N):
-                    tempi = SortedIndex.pop()
-                    temp = F[i][tempi]
-                    print(tempi)
-                    print(temp)
-                    P.append(temp)
+                    P.append(F[i][SortedIndex.pop()])
             t +=1
         return P
 

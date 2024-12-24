@@ -37,6 +37,7 @@ class CD:
             # xi is the ith highest individual regarding values on objective k
             def xi(i):
                 return self.ListF[IndiciesSortedByK[i]]
+            
             q = fk(xi(-1))- fk(xi(0))
             if q != 0:
                 for i in range(1,self.N-1):
@@ -58,8 +59,8 @@ class CD:
 if __name__ == "__main__":
 
     def f(x):
-        return LOTZ.LOTZm(4,x)
-    A = Sample.GenerateIndividual(12,19)
+        return LOTZ.LOTZm(2,x)
+    A = Sample.GenerateIndividual(4,5)
     CD1 = CD(f,A)
     for k in A:
         print(k)
