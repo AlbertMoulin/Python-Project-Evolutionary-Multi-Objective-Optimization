@@ -38,9 +38,9 @@ class NSGA:
                 FiCD.CD()
                 BinHea = BinaryHeap(FiCD)
                 while(len(P)<N):
-                    P.append(BinHea.extract_max())
+                    temp = BinHea.extract_max()
+                    P.append(temp)
             t +=1
-        print(t)
         return P
 
     def AinB(A,B):
@@ -55,12 +55,12 @@ class NSGA:
         return True
     
 if __name__ == "__main__":
-
+    
     A = Sample.GenerateIndividual(2,3)
     B = Sample.GenerateIndividual(2,2)
-    print(A)
-    print(B)
-    print(NSGA.AinB(A,B))
+    #print(A)
+    #print(B)
+    #print(NSGA.AinB(A,B))
 
     random.seed(8)
     n = 6
@@ -68,21 +68,21 @@ if __name__ == "__main__":
     print(f'test with n = {n} and m = {m}')
     def f(x):
         return LOTZ.LOTZm(m,x)
-    print(NSGA.NSGA(f,n))
+    #print(NSGA.NSGA(f,n))
 
     n = 6
     m = 6
     print(f'test with n = {n} and m = {m}')
     def f(x):
         return LOTZ.LOTZm(m,x)
-    print(NSGA.NSGA(f,n))
+    #print(NSGA.NSGA(f,n))
 
     n = 10
     m = 2
     print(f'test with n = {n} and m = {m}')
     def f(x):
         return LOTZ.LOTZm(m,x)
-    print(NSGA.NSGA(f,n))
+    #print(NSGA.NSGA(f,n))
 
     n = 10
     m = 4
@@ -90,5 +90,6 @@ if __name__ == "__main__":
     def f(x):
         return LOTZ.LOTZm(m,x)
     print(NSGA.NSGA(f,n))
+    
 
     
