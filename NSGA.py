@@ -33,11 +33,12 @@ class NSGA:
                 i = i+1
             # If we dont have N individuals we add individuals by decreasing order of crowding distance until reaching a size of N
             if len(P) < N:
-                FiCD = CD(f,F[i])
+                A = random.sample(F[i], len(F[i]))
+                FiCD = CD(f,A)
                 CrowdingDistance = FiCD.CD()
-                SortedIndex = sorted(range(len(F[i])),key=lambda index: CrowdingDistance[index])
+                SortedIndex = sorted(range(len(A)),key=lambda index: CrowdingDistance[index])
                 while(len(P)<N):
-                    P.append(F[i][SortedIndex.pop()])
+                    P.append(A[SortedIndex.pop()])
             t +=1
             print(t)
         return P
@@ -61,7 +62,7 @@ if __name__ == "__main__":
     print(B)
     print(NSGA.AinB(A,B))
 
-    random.seed(7)
+    random.seed(8)
     n = 6
     m = 2
     print(f'test with n = {n} and m = {m}')
