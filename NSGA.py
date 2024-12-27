@@ -39,7 +39,7 @@ class NSGA:
                 while(len(P)<N):
                     P.append(F[i][SortedIndex.pop()])
             t +=1
-        print(t)
+            print(t)
         return P
 
     def AinB(A,B):
@@ -61,30 +61,30 @@ if __name__ == "__main__":
     print(B)
     print(NSGA.AinB(A,B))
 
-    random.seed(8)
+    random.seed(7)
     n = 6
     m = 2
     print(f'test with n = {n} and m = {m}')
     def f(x):
         return LOTZ.LOTZm(m,x)
-    print(NSGA.NSGA(f,n))
+    #print(NSGA.NSGA(f,n))
 
     n = 6
     m = 6
     print(f'test with n = {n} and m = {m}')
     def f(x):
         return LOTZ.LOTZm(m,x)
-    print(NSGA.NSGA(f,n))
+    #print(NSGA.NSGA(f,n))
 
     n = 9
     m = 2
     print(f'test with n = {n} and m = {m}')
     def f(x):
         return LOTZ.LOTZm(m,x)
-    print(NSGA.NSGA(f,n))
+    #print(NSGA.NSGA(f,n))
 
-    n = 9
-    m = 6
+    n = 10
+    m = 4
     print(f'test with n = {n} and m = {m}')
     def f(x):
         return LOTZ.LOTZm(m,x)
