@@ -34,7 +34,7 @@ class NSGA:
                 i = i+1
             # If we dont have N individuals we add individuals by decreasing order of crowding distance until reaching a size of N
             if len(P) < N:
-                FiCD = CD(f,F[i])
+                FiCD = CD(f,random.sample(F[i], len(F[i])))
                 FiCD.CalculateCrowdingDistance()
                 BinHea = BinaryHeap(FiCD)
                 while(len(P)<N):
