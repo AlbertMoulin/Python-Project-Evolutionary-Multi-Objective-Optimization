@@ -35,12 +35,12 @@ class NSGA:
             # If we dont have N individuals we add individuals by decreasing order of crowding distance until reaching a size of N
             if len(P) < N:
                 FiCD = CD(f,F[i])
-                FiCD.CD()
+                FiCD.CalculateCrowdingDistance()
                 BinHea = BinaryHeap(FiCD)
                 while(len(P)<N):
-                    temp = BinHea.extract_max()
-                    P.append(temp)
+                    P.append(BinHea.extract_max())
             t +=1
+            print(t)
         return P
 
     def AinB(A,B):

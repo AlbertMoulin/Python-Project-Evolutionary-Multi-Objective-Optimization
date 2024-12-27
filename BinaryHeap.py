@@ -39,7 +39,7 @@ class BinaryHeap:
         self.heap.pop()
 
         # Recalculating the crowding distances
-        self.FiCD.update(max_element)
+        #self.FiCD.update(max_element)
         
         if self.heap:
             self._bubble_down(0)
@@ -76,6 +76,7 @@ if __name__ == "__main__":
     print("Liste générée :", ListF)
     for k in ListF:
         print(k.CrowdingDistance)
+    
     heap = BinaryHeap(FiCD)
 
     print("BinaryHeap initial :", heap.heap)
