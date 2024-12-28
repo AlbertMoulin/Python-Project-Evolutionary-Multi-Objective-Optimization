@@ -30,19 +30,24 @@ class CD:
             i.PreviousList = [0]*self.m
             i.NextList = [0]*self.m
 
+    # Defining the function returning only the k-th objective
     def fk(self, k : int, x : Individual) -> float:
         return self.f(x).value[k]
     
     def CalculateCrowdingDistanceK(self, k : int):
+        # Sort the indicies by values on objective k
         IndiciesSortedByK = sorted(range(self.N), key=lambda index: self.fk(k, self.ListF[index]) )
 
+        # function giving the i-th highest individual for objective k
         def xi(i : int) -> Individual:
                 return self.ListF[IndiciesSortedByK[i]]
         
+        # Calculate difference between the highest and lowest
         q = self.fk(k,xi(-1))- self.fk(k,xi(0))
 
         self.ListQ[k] = q
 
+        # Verify if individuals are all equal on objective k
         if q == 0:
             self.CDKallequal(k)
         else:
@@ -51,7 +56,7 @@ class CD:
 
 
     def CDKallequal(self, k : int):
-
+        # If they are all equal the crowding distance is 0 for every individual
         for i in self.ListF:
             i.CrowdingDistanceListK[k] = 0
             i.PreviousList[k] = " "
@@ -60,13 +65,15 @@ class CD:
 
 
     def CDKnotequal(self, k : int , xi : Callable[[int],Individual]):
-        
+        # Calculate crowding distance for the lowest individual
         xi(0).CrowdingDistanceListK[k] = float('inf')
         xi(0).PreviousList[k] = "NoPrevious"
         xi(0).NextList[k] = xi(1)
+        # Calculate crowding distance for the highest individual
         xi(self.N-1).CrowdingDistanceListK[k] = float('inf')
         xi(self.N-1).NextList[k] = "NoNext"
         xi(self.N-1).PreviousList[k] = xi(self.N-2)
+        # Calculate crowding distance for everyone in between
         for i in range(1,self.N-1):
             di = self.fk(k,xi(i+1))- self.fk(k,xi(i-1))
             xi(i).CrowdingDistanceListK[k] = di / self.ListQ[k]
@@ -84,8 +91,9 @@ class CD:
             self.ListF[i].CalculateCrowdingDistance()
 
     def update(self, x : Individual):
-
+        # Loop on all objectives
         for k in range(self.m):
+            # Differenciate between if the individual is the highest lowest or in between
             if x.PreviousList[k] == ' ' and x.NextList[k] == ' ':
                 continue
             elif x.PreviousList[k] == "NoPrevious":
@@ -98,18 +106,17 @@ class CD:
         self.ListF.remove(x)
         self.N += -1
 
-
+    # If the individual is the lowest for objective k we need to update every individual
     def updatefirst(self, k : int ,x0 : Individual ):
-
+        # find the new lowest and highest value
         x1 = x0.NextList[k]
         xinf = x0
         while(xinf.NextList[k] != "NoNext"):
             xinf = xinf.NextList[k]
-        #Update x1
+        #Update lowest value
         x1.CrowdingDistanceListK[k] = float('inf')
         x1.PreviousList[k] = "NoPrevious"
-        #Update xinf
-
+        # Calculate crowding distance
         q = self.fk(k,xinf) - self.fk(k,x1)
         if q == 0:
             self.CDKallequal(k)
@@ -127,6 +134,7 @@ class CD:
         x0.NextList[k] = 'Updated out'
         x0.PreviousList[k] = 'Updated out'
     
+    # Same for updating highest value
     def updatelast(self, k : int ,xinf : Individual ):
 
         xinfnv = xinf.PreviousList[k]
@@ -154,7 +162,7 @@ class CD:
         xinf.NextList[k] = 'Updated out'
         xinf.PreviousList[k] = 'Updated out'
     
-
+    # If they are now all equal
     def updateCDnotequal(self, k : int,x1 : Individual):
         if x1.PreviousList[k] == "NoPrevious":
             x1 = x1.NextList[k]
@@ -166,28 +174,7 @@ class CD:
 
             x1 = x1.NextList[k]
 
-    # def updateINF(self, k : int , x : Individual):
-    #     q = self.fk(k,x.PreviousList[k]) - self.fk(k,x.NextList[k])
-    #     self.ListQ[k] = q 
-    #     if q == 0:
-    #         x.NextList[k].PreviousList[k] = x.PreviousList[k]
-    #         x.PreviousList[k].NextList[k] = x.NextList[k]
-    #         xi = x
-    #         while xi.state[k] != 3 :
-    #             xi.CrowdingDistanceListK[k] = 0
-    #             xi.state[k] = 3
-    #             xi = xi.NextList[k]
-    #     else : 
-    #         x.NextList[k].PreviousList[k] = x.PreviousList[k]
-    #         x.PreviousList[k].NextList[k] = x.NextList[k]
-    #         xi = x.NextList[k]
-    #         for i in range(1,self.N-2):
-    #             xi.CrowdingDistanceListK[k] = ( self.fk(k,xi.NextList[k])- self.fk(k,xi.PreviousList[k]) ) / q
-    #             xi = xi.NextList[k]
-    #         x.NextList[k].CrowdingDistanceListK[k] = float('inf')
-    #         x.PreviousList[k].CrowdingDistanceListK[k] = float('inf')
-
-
+    # If the value is in between we just need to update two values
     def updatenormal(self, k : int , x : Individual):
         xN = x.NextList[k]
         xP = x.PreviousList[k]
@@ -208,9 +195,11 @@ class CD:
             xP.CalculateCrowdingDistance()
             
 
-# tests
+# Testing the functions
 if __name__ == "__main__":
     random.seed(8)
+
+    # Verify crowding distance for random set
     def f(x):
         return LOTZ.LOTZm(2,x)
     A : list[Individual] = Sample.GenerateIndividual(4,18) 
@@ -225,7 +214,10 @@ if __name__ == "__main__":
         print(i.PreviousList)
         print(i.NextList)
         print(i.CrowdingDistance)
-    # verifier update normal
+
+
+
+    # Verify the updating
     for i in range(18):
         CD1.update(A[0])
     print("    heyyyyyyyy    ")

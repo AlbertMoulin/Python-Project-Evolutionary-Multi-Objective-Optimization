@@ -4,7 +4,7 @@ from CrowdingDistance import CD
 from LOTZ import LOTZ
 
 class BinaryHeap:
-
+    # classic implementation of a binary heap
     heap : list[Individual]
     FiCD : CD
 
@@ -61,7 +61,7 @@ class BinaryHeap:
             if right_child < size and self.heap[right_child].CrowdingDistance > self.heap[highest].CrowdingDistance:
                 highest = right_child
 
-            # Si l'index actuel n'est pas le plus petit, échanger
+            # If the parent is not the highest swap the two
             if highest != index:
                 self.heap[index], self.heap[highest] = self.heap[highest], self.heap[index]
                 index = highest
@@ -69,7 +69,7 @@ class BinaryHeap:
                 break
 
 if __name__ == "__main__":
-    # Générer des données pour tester le BinaryHeap
+    # Generate sample for the Binary Heap
     ListF = Sample.GenerateIndividual(3, 10)
     FiCD = CD(LOTZ.LOTZdeux, ListF)
     FiCD.CalculateCrowdingDistance()
@@ -81,7 +81,7 @@ if __name__ == "__main__":
 
     print("BinaryHeap initial :", heap.heap)
 
-    # Extraire les éléments minimaux
+    # Extract the maximum until the heap is empty
     print("Extraction des éléments dans l'ordre croissant :")
     while heap.heap:
         min_element = heap.extract_max()
