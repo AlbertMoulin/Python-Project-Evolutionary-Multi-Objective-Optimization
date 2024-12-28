@@ -4,12 +4,13 @@ from Sample import Sample
 from NDS import Nds
 from CrowdingDistance import CD
 from BinaryHeap import BinaryHeap
+from typing import Callable
 import random
 
 
 class NSGA:
 
-    def NSGA(f,n):
+    def NSGA(f : Callable ,n : int) -> list[Individual]:
         # Retrieving the value of m through the function f
         m = len(f(Sample.GenerateIndividual(n,1)[0]).value)
         # Generating optimal front for n and m
@@ -40,10 +41,11 @@ class NSGA:
                 while(len(P)<N):
                     P.append(BinHea.extract_max())
             t +=1
-            print(t)
+        print(t)
         return P
 
-    def AinB(A,B):
+    def AinB(A : list[Individual],B : list[Individual] ) -> bool:
+        # Verify that A in included in B by verifying if every x in A is also in B
         for x in A:
             boolx = True
             i=0
