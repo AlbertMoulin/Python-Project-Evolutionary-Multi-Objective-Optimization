@@ -39,7 +39,7 @@ class BinaryHeap:
         self.heap.pop()
 
         # Recalculating the crowding distances
-        #self.FiCD.update(max_element)
+        self.FiCD.update(max_element)
         
         if self.heap:
             self._bubble_down(0)
