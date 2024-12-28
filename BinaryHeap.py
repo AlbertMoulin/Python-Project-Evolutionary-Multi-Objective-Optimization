@@ -72,7 +72,7 @@ if __name__ == "__main__":
     # Générer des données pour tester le BinaryHeap
     ListF = Sample.GenerateIndividual(3, 10)
     FiCD = CD(LOTZ.LOTZdeux, ListF)
-    FiCD.CD()
+    FiCD.CalculateCrowdingDistance()
     print("Liste générée :", ListF)
     for k in ListF:
         print(k.CrowdingDistance)

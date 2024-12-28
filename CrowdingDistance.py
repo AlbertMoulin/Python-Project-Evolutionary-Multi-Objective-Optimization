@@ -89,12 +89,82 @@ class CD:
             if x.PreviousList[k] == ' ' and x.NextList[k] == ' ':
                 continue
             elif x.PreviousList[k] == "NoPrevious":
-                self.updatefirst()
+                self.updatefirst(k, x)
             elif x.NextList[k] == "NoNext":
-                self.updatelast()
+                self.updatelast(k,x)
             else:
-                self.updatenormal(x)
+                self.updatenormal(k, x)
+        
+        self.ListF.remove(x)
+        self.N += -1
 
+
+    def updatefirst(self, k : int ,x0 : Individual ):
+
+        x1 = x0.NextList[k]
+        xinf = x0
+        while(xinf.NextList[k] != "NoNext"):
+            xinf = xinf.NextList[k]
+        #Update x1
+        x1.CrowdingDistanceListK[k] = float('inf')
+        x1.PreviousList[k] = "NoPrevious"
+        #Update xinf
+
+        q = self.fk(k,xinf) - self.fk(k,x1)
+        if q == 0:
+            self.CDKallequal(k)
+            for i in self.ListF:
+                i.CalculateCrowdingDistance()
+        else:
+            self.ListQ[k] = q
+            self.updateCDnotequal(k,x1)
+        
+            while (x1.NextList[k] != "NoNext"):
+                x1.CalculateCrowdingDistance()
+                x1 = x1.NextList[k]
+        
+        x0.CrowdingDistanceListK[k] = 'Updated out'
+        x0.NextList[k] = 'Updated out'
+        x0.PreviousList[k] = 'Updated out'
+    
+    def updatelast(self, k : int ,xinf : Individual ):
+
+        xinfnv = xinf.PreviousList[k]
+        x0 = xinf
+        while(x0.PreviousList[k] != "NoPrevious"):
+            x0 = x0.PreviousList[k]
+        #Update xinfnv
+        xinfnv.CrowdingDistanceListK[k] = float('inf')
+        xinfnv.NextList[k] = "NoNext"
+        #Update x0
+
+        q = self.fk(k,xinfnv) - self.fk(k,x0)
+        if q == 0:
+            self.CDKallequal(k)
+            for i in self.ListF:
+                i.CalculateCrowdingDistance()
+        else:
+            self.ListQ[k] = q
+            self.updateCDnotequal(k,x0)
+            while (x0.NextList[k] != "NoNext"):
+                x0.CalculateCrowdingDistance()
+                x0 = x0.NextList[k]
+        
+        xinf.CrowdingDistanceListK[k] = 'Updated out'
+        xinf.NextList[k] = 'Updated out'
+        xinf.PreviousList[k] = 'Updated out'
+    
+
+    def updateCDnotequal(self, k : int,x1 : Individual):
+        if x1.PreviousList[k] == "NoPrevious":
+            x1 = x1.NextList[k]
+        while(x1.NextList[k] != "NoNext"):
+
+            dx = self.fk(k,x1.NextList[k]) - self.fk(k,x1.PreviousList[k])
+
+            x1.CrowdingDistanceListK[k] = dx / self.ListQ[k]
+
+            x1 = x1.NextList[k]
 
     # def updateINF(self, k : int , x : Individual):
     #     q = self.fk(k,x.PreviousList[k]) - self.fk(k,x.NextList[k])
@@ -126,14 +196,16 @@ class CD:
         x.CrowdingDistanceListK[k] = 'Updated out'
         #Update the next element
         xN.PreviousList[k] = xP
-        dxN = self.fk(k,xN.NextList[k]) - self.fk(k,xN.PreviousList[k])
-        xN.CrowdingDistanceListK[k] = dxN/self.ListQ[k]
-        xN.CalculateCrowdingDistance()
+        if xN.CrowdingDistanceListK[k] != float('inf'):
+            dxN = self.fk(k,xN.NextList[k]) - self.fk(k,xN.PreviousList[k])
+            xN.CrowdingDistanceListK[k] = dxN/self.ListQ[k]
+            xN.CalculateCrowdingDistance()
         #Update the previous element
         xP.NextList[k] = xN
-        dxP = self.fk(k,xP.NextList[k]) - self.fk(k,xP.PreviousList[k])
-        xP.CrowdingDistanceListK[k] = dxP/self.ListQ[k]
-        xP.CalculateCrowdingDistance()
+        if xP.CrowdingDistanceListK[k] != float('inf'):
+            dxP = self.fk(k,xP.NextList[k]) - self.fk(k,xP.PreviousList[k])
+            xP.CrowdingDistanceListK[k] = dxP/self.ListQ[k]
+            xP.CalculateCrowdingDistance()
             
 
 # tests
@@ -141,7 +213,7 @@ if __name__ == "__main__":
     random.seed(8)
     def f(x):
         return LOTZ.LOTZm(2,x)
-    A : list[Individual] = Sample.GenerateIndividual(4,4) 
+    A : list[Individual] = Sample.GenerateIndividual(4,18) 
     B = [Individual([0,1,1,0]) for k in range(5)]
     CD1 = CD(f,A)
     print(A)
@@ -154,6 +226,16 @@ if __name__ == "__main__":
         print(i.NextList)
         print(i.CrowdingDistance)
     # verifier update normal
+    for i in range(18):
+        CD1.update(A[0])
+    print("    heyyyyyyyy    ")
+    for i in A:
+        print(i)
+        print(i.CrowdingDistanceListK)
+        print(i.PreviousList)
+        print(i.NextList)
+        print(i.CrowdingDistance)
+
     
     
 

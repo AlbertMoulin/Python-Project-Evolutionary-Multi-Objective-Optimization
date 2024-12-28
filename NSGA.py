@@ -62,7 +62,7 @@ if __name__ == "__main__":
     #print(B)
     #print(NSGA.AinB(A,B))
 
-    random.seed(7)
+    random.seed(8)
     n = 6
     m = 2
     print(f'test with n = {n} and m = {m}')
